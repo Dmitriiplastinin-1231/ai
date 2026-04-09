@@ -11,13 +11,20 @@ TRAIN_PATH = "prices_train.csv"
 TEST_PATH = "prices_test.csv"
 OUTPUT_PATH = "submission.csv"
 TARGET = "Y house price of unit area"
+N_ESTIMATORS = 700
+MIN_SAMPLES_LEAF = 1
+GB_N_ESTIMATORS = 500
+GB_LEARNING_RATE = 0.03
+GB_MAX_DEPTH = 3
 
 
 def load_features(path: str, target: str | None = None):
     df = pd.read_csv(path)
-    index_values = df["Unnamed: 0"] if "Unnamed: 0" in df.columns else pd.Series(np.arange(len(df)))
     if "Unnamed: 0" in df.columns:
+        index_values = df["Unnamed: 0"]
         df = df.drop(columns=["Unnamed: 0"])
+    else:
+        index_values = pd.Series(np.arange(len(df)))
 
     if target is None:
         return df, index_values
@@ -36,8 +43,8 @@ def build_model_candidates():
                 (
                     "model",
                     ExtraTreesRegressor(
-                        n_estimators=700,
-                        min_samples_leaf=1,
+                        n_estimators=N_ESTIMATORS,
+                        min_samples_leaf=MIN_SAMPLES_LEAF,
                         random_state=42,
                         n_jobs=-1,
                     ),
@@ -50,8 +57,8 @@ def build_model_candidates():
                 (
                     "model",
                     RandomForestRegressor(
-                        n_estimators=700,
-                        min_samples_leaf=1,
+                        n_estimators=N_ESTIMATORS,
+                        min_samples_leaf=MIN_SAMPLES_LEAF,
                         random_state=42,
                         n_jobs=-1,
                     ),
@@ -64,9 +71,9 @@ def build_model_candidates():
                 (
                     "model",
                     GradientBoostingRegressor(
-                        n_estimators=500,
-                        learning_rate=0.03,
-                        max_depth=3,
+                        n_estimators=GB_N_ESTIMATORS,
+                        learning_rate=GB_LEARNING_RATE,
+                        max_depth=GB_MAX_DEPTH,
                         random_state=42,
                     ),
                 )
