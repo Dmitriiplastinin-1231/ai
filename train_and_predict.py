@@ -15,19 +15,19 @@ TARGET = "Y house price of unit area"
 
 def load_features(path: str, target: str | None = None):
     df = pd.read_csv(path)
-    index_col = df["Unnamed: 0"] if "Unnamed: 0" in df.columns else pd.Series(np.arange(len(df)))
+    index_values = df["Unnamed: 0"] if "Unnamed: 0" in df.columns else pd.Series(np.arange(len(df)))
     if "Unnamed: 0" in df.columns:
         df = df.drop(columns=["Unnamed: 0"])
 
     if target is None:
-        return df, index_col
+        return df, index_values
 
     y = df[target]
     x = df.drop(columns=[target])
     return x, y
 
 
-def build_candidates():
+def build_model_candidates():
     common = [("imputer", SimpleImputer(strategy="median"))]
     return {
         "extra_trees": Pipeline(
@@ -86,7 +86,7 @@ def main():
     best_rmse = float("inf")
     best_model = None
 
-    for name, model in build_candidates().items():
+    for name, model in build_model_candidates().items():
         scores = cross_val_score(model, x_train, y_train, cv=cv, scoring=scorer, n_jobs=-1)
         rmse = -scores.mean()
         print(f"{name}: CV RMSE={rmse:.4f}")
