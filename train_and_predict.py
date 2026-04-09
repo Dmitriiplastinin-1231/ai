@@ -46,7 +46,7 @@ def build_model_candidates():
                         n_estimators=N_ESTIMATORS,
                         min_samples_leaf=MIN_SAMPLES_LEAF,
                         random_state=42,
-                        n_jobs=-1,
+                        n_jobs=1,
                     ),
                 )
             ]
@@ -60,7 +60,7 @@ def build_model_candidates():
                         n_estimators=N_ESTIMATORS,
                         min_samples_leaf=MIN_SAMPLES_LEAF,
                         random_state=42,
-                        n_jobs=-1,
+                        n_jobs=1,
                     ),
                 )
             ]
